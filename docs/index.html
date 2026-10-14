@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folio Builder · The Scholium</title>
+<meta name="description" content="Build a hyperlinked academic-year planner for the Supernote Nomad and other e-ink tablets: your courses on the tabs, your time zone for the moon, daily or weekly pages.">
+<meta property="og:title" content="The Folio · build your own e-ink planner">
+<meta property="og:description" content="A hyperlinked academic-year planner for e-ink tablets, with your courses on the tabs. Free.">
+<meta property="og:image" content="https://thescholium.github.io/scholium/folio/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#12100e">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script src="mark.js"></script>
+<script src="folio.js"></script>
+<style>
+@font-face{font-family:EBG;src:url(fonts/ebg-roman.woff2) format('woff2');font-weight:400 600}
+@font-face{font-family:EBG;src:url(fonts/ebg-italic.woff2) format('woff2');font-style:italic;font-weight:400 600}
+@font-face{font-family:CG;src:url(fonts/cg-roman.woff2) format('woff2');font-weight:400 600}
+@font-face{font-family:CG;src:url(fonts/cg-italic.woff2) format('woff2');font-style:italic;font-weight:400 600}
+:root{--bg:#12100e;--bg0:#0d0c0a;--bg3:#1b1814;--rule:#2a251d;--text:#d6ccb4;--bright:#ebe1c8;--muted:#948b76;--faint:#7a7160;--gold:#c4a24d;--gold-dim:#8f7639;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(ellipse 80% 30rem at 30% 0,rgba(196,162,77,.07),transparent 70%),var(--bg);color:var(--text);font-family:EBG,Georgia,serif;font-size:18px;line-height:1.55;font-feature-settings:"onum","kern"}
+a{color:#ddbd5e}
+.sc{font-variant:small-caps;letter-spacing:.1em}
+header.ui{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--rule)}
+header.ui .brand{display:flex;align-items:center;gap:12px;color:var(--bright);text-decoration:none;font-variant:small-caps;letter-spacing:.14em;font-size:15px}
+header.ui .brand svg{height:30px;width:auto}
+header.ui nav a{color:var(--muted);text-decoration:none;font-variant:small-caps;letter-spacing:.08em;margin-left:22px;font-size:16px}
+header.ui nav a:hover{color:var(--gold)}
+.wrap{display:grid;grid-template-columns:400px minmax(0,1fr);min-height:calc(100vh - 60px)}
+aside.ui{border-right:1px solid var(--rule);padding:30px 28px 40px;background:rgba(13,12,10,.5)}
+aside.ui .stick{position:sticky;top:20px}
+.kick{font-variant:small-caps;letter-spacing:.24em;color:var(--gold);font-size:14px}
+h1.t{font-family:CG,Georgia,serif;font-weight:500;font-size:62px;line-height:1;color:var(--bright);margin:4px 0 8px}
+h1.t i{color:#d6b25e}
+.lede{font-style:italic;color:var(--muted);margin:0 0 22px}
+fieldset{border:none;padding:0;margin:0 0 18px}
+legend,label.l{display:block;font-variant:small-caps;letter-spacing:.12em;color:var(--bright);font-size:15px;margin-bottom:6px}
+input[type=month],input[type=text],input[type=number],select{width:100%;background:var(--bg0);color:var(--bright);border:1px solid var(--rule);border-radius:2px;padding:8px 10px;font:inherit;font-size:17px}
+input:focus,select:focus{outline:1px solid var(--gold-dim);border-color:var(--gold-dim)}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+.seg{display:flex;border:1px solid var(--rule);border-radius:2px;overflow:hidden}
+.seg label{flex:1;text-align:center;padding:7px 4px;cursor:pointer;font-variant:small-caps;letter-spacing:.08em;font-size:15px;color:var(--muted)}
+.seg input{display:none}
+.seg input:checked+span{color:#14110b}
+.seg label:has(input:checked){background:var(--gold-dim);color:#14110b}
+.courses .c{display:grid;grid-template-columns:22px 1fr 96px 26px;gap:6px;align-items:center;margin-bottom:6px}
+.courses .c span{color:var(--faint);font-family:CG,Georgia,serif;font-size:18px}
+.courses .c button{background:none;border:none;color:var(--faint);cursor:pointer;font-size:18px}
+.courses .c button:hover{color:var(--gold)}
+.btn{display:inline-block;border:1px solid var(--gold-dim);border-radius:2px;background:none;color:var(--gold);font:inherit;font-variant:small-caps;letter-spacing:.09em;padding:9px 18px;cursor:pointer;text-decoration:none}
+.btn:hover{background:rgba(196,162,77,.1);border-color:var(--gold)}
+.btn.cta{background:var(--gold-dim);color:#14110b;border-color:var(--gold-dim)}
+.btn.cta:hover{background:var(--gold)}
+.btn[disabled]{opacity:.45;cursor:default}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 10px}
+.status{color:var(--muted);font-size:15px;min-height:1.5em}
+.howto{margin-top:22px;border-left:2px solid var(--gold-dim);background:rgba(196,162,77,.05);padding:12px 16px;font-size:15.5px;color:var(--text)}
+.howto ol{margin:6px 0 0;padding-left:20px}
+.howto li{margin:3px 0}
+.hint{font-size:14px;color:var(--faint);margin-top:4px}
+main.ui{padding:26px 28px 60px;min-width:0}
+.bar{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:16px;flex-wrap:wrap}
+.bar h2{font-family:CG,Georgia,serif;font-style:italic;font-weight:500;font-size:34px;color:var(--gold);margin:0}
+.bar .z{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:15px}
+.bar .z button{background:none;border:1px solid var(--rule);color:var(--text);width:30px;height:28px;cursor:pointer}
+#wall{display:flex;flex-wrap:wrap;gap:18px;align-content:flex-start}
+#wall .cell{width:calc(1404px * var(--s));height:calc(1872px * var(--s));flex:none;box-shadow:0 10px 30px rgba(0,0,0,.55);background:#fff;overflow:hidden;content-visibility:auto;contain-intrinsic-size:calc(1404px * var(--s)) calc(1872px * var(--s))}
+#wall .cell>.page{transform:scale(var(--s));transform-origin:0 0}
+#wall .cell.hit{outline:3px solid var(--gold);outline-offset:3px}
+.empty{color:var(--faint);font-style:italic;padding:40px 0}
+footer.ui{border-top:1px solid var(--rule);padding:20px 28px;color:var(--faint);font-size:14px}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}aside.ui{border-right:none;border-bottom:1px solid var(--rule)}aside.ui .stick{position:static}}
+@media (max-width:560px){header.ui{padding:12px 16px}header.ui nav a{margin-left:14px}header.ui nav a:nth-child(2){display:none}aside.ui,main.ui{padding-left:16px;padding-right:16px}footer.ui{padding:18px 16px}h1.t{font-size:52px}}
+/* printing: only the pages, at full size */
+@media print{
+  html,body{background:#fff !important}
+  header.ui,aside.ui,footer.ui,.bar{display:none !important}
+  .wrap,main.ui{display:block;padding:0;margin:0}
+  #wall{display:block}
+  #wall .cell{display:contents}
+  #wall .cell>.page{transform:none}
+}
+</style>
+</head>
+<body>
+<header class="ui">
+  <a class="brand" href="../"><span id="mk"></span><span>The Scholium</span></a>
+  <nav><a href="../">Templates</a><a href="https://thescholium.github.io/istari">Istari</a><a href="https://github.com/TheScholium">GitHub</a></nav>
+</header>
+<div class="wrap">
+<aside class="ui"><div class="stick">
+  <div class="kick">a planner for e-ink</div>
+  <h1 class="t">The <i>Folio</i></h1>
+  <p class="lede">A whole academic year in one tappable PDF: tabs on every page, linked calendars, a section for each course.</p>
+
+  <fieldset><div class="row">
+    <div><label class="l" for="start">Starts</label><input id="start" type="month" value="2026-08"></div>
+    <div><label class="l" for="months">Months</label><input id="months" type="number" min="1" max="24" value="12"></div>
+  </div></fieldset>
+
+  <fieldset><legend>Pages</legend><div class="seg">
+    <label><input type="radio" name="pages" value="daily" checked><span>a page a day</span></label>
+    <label><input type="radio" name="pages" value="weekly"><span>weeks only</span></label>
+  </div></fieldset>
+
+  <fieldset><legend>Weeks start on</legend><div class="seg">
+    <label><input type="radio" name="ws" value="mon" checked><span>Monday</span></label>
+    <label><input type="radio" name="ws" value="sun"><span>Sunday</span></label>
+  </div></fieldset>
+
+  <fieldset class="courses"><legend>Courses <span class="hint" style="font-variant:normal;letter-spacing:0;color:var(--faint)">&nbsp;full name · tab label</span></legend>
+    <div id="courses"></div>
+    <button class="btn" id="addc" type="button" style="padding:4px 12px;font-size:15px">+ course</button>
+  </fieldset>
+
+  <fieldset><div class="row">
+    <div><label class="l" for="owner">Your name</label><input id="owner" type="text" placeholder="on the cover (optional)"></div>
+  </div></fieldset>
+
+  <fieldset><label class="l" for="tz">Time zone <span class="hint" style="font-variant:normal;letter-spacing:0">for the moon phases</span></label><select id="tz"></select></fieldset>
+
+  <fieldset><label class="l" for="left">Left margin <span id="leftv" class="hint" style="font-variant:normal;letter-spacing:0">56 px</span></label>
+    <input id="left" type="range" min="40" max="200" step="4" value="56" style="width:100%;accent-color:#c4a24d">
+    <div class="hint">Make room for the toolbar if you keep it on the left.</div></fieldset>
+
+  <div class="actions">
+    <button class="btn cta" id="build" type="button">Build my Folio</button>
+    <button class="btn" id="print" type="button" disabled>Save as PDF</button>
+  </div>
+  <div class="status" id="status"></div>
+
+  <div class="howto">
+    <b class="sc" style="color:var(--bright)">Saving it</b>
+    <ol>
+      <li>Use Chrome or Edge on a computer.</li>
+      <li>Build, then <b>Save as PDF</b>. In the print window choose <i>Save as PDF</i>; leave margins at default.</li>
+      <li>Copy the PDF into the <b>Document</b> folder on your Supernote (USB, Partner app or cloud).</li>
+    </ol>
+    <div class="hint" style="margin-top:8px">Nothing leaves your computer: the Folio is built in this page.</div>
+  </div>
+</div></aside>
+
+<main class="ui">
+  <div class="bar"><h2 id="title">Your Folio</h2>
+    <div class="z"><span id="count"></span><button id="zo" type="button" title="smaller">−</button><button id="zi" type="button" title="larger">+</button></div></div>
+  <div id="wall" style="--s:.16"><div class="empty">Choose your settings and build. Every page appears here, and the links work: tap a tab to jump.</div></div>
+</main>
+</div>
+<footer class="ui">The Folio is free under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>: print it, share it, adapt it, but don't sell it. Moon phases after Meeus, <i>Astronomical Algorithms</i>, ch. 49. Made by <a href="https://github.com/TheScholium">The Scholium</a>.</footer>
+
+<script>
+(function () {
+  const $ = (s) => document.querySelector(s);
+  const m = window.SCHOL_MARK;
+  $("#mk").innerHTML = `<svg viewBox='${m.vb}'><path d='${m.d}' fill='#e4d9bf'/></svg>`;
+
+  // time zones
+  const here = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  const zones = (Intl.supportedValuesOf ? Intl.supportedValuesOf("timeZone") : [here, "UTC"]);
+  if (!zones.includes(here)) zones.unshift(here);
+  $("#tz").innerHTML = zones.map((z) => `<option${z === here ? " selected" : ""}>${z}</option>`).join("");
+
+  // courses
+  const courses = [["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""]];
+  const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+  function drawCourses() {
+    $("#courses").innerHTML = courses.map((c, i) => `<div class=c><span>${roman[i]}</span>
+      <input type=text data-i=${i} data-k=0 value="${c[0].replace(/"/g, "&quot;")}" placeholder="Course ${roman[i]}">
+      <input type=text data-i=${i} data-k=1 maxlength=8 value="${c[1].replace(/"/g, "&quot;")}" placeholder="C·${roman[i]}">
+      <button type=button data-del=${i} title="remove">×</button></div>`).join("");
+    $("#addc").disabled = courses.length >= 8;
+  }
+  $("#courses").addEventListener("input", (e) => { const t = e.target; if (t.dataset.i) courses[+t.dataset.i][+t.dataset.k] = t.value; });
+  $("#courses").addEventListener("click", (e) => { const d = e.target.dataset.del; if (d !== undefined && courses.length > 1) { courses.splice(+d, 1); drawCourses(); } });
+  $("#addc").addEventListener("click", () => { if (courses.length < 8) { courses.push(["", ""]); drawCourses(); } });
+  drawCourses();
+
+  $("#left").addEventListener("input", () => { $("#leftv").textContent = $("#left").value + " px"; });
+
+  function config() {
+    return {
+      start: $("#start").value || "2026-08",
+      months: Math.max(1, Math.min(24, +$("#months").value || 12)),
+      weekly: document.querySelector("input[name=pages]:checked").value === "weekly",
+      sunday: document.querySelector("input[name=ws]:checked").value === "sun",
+      tz: $("#tz").value, left: +$("#left").value, owner: $("#owner").value.trim(),
+      courses: courses.map(([name, tab]) => ({ name: name.trim(), tab: tab.trim() })),
+    };
+  }
+
+  let built = false;
+  async function build() {
+    const btn = $("#build");
+    btn.disabled = true; $("#print").disabled = true;
+    $("#status").textContent = "Building…";
+    await new Promise((r) => setTimeout(r, 30));
+    const t0 = performance.now();
+    const wall = $("#wall");
+    const tmp = document.createElement("div");
+    const res = Folio.render(config(), tmp);
+    wall.innerHTML = "";
+    wall.classList.add("folio");
+    for (const sec of [...tmp.children]) { const cell = document.createElement("div"); cell.className = "cell"; cell.appendChild(sec); wall.appendChild(cell); }
+    await document.fonts.ready;
+    // paper needs real layout sizes, so measure every page (content-visibility
+    // would skip off-screen ones): switch it off while drawing.
+    wall.querySelectorAll(".cell").forEach((c) => (c.style.contentVisibility = "visible"));
+    Folio.paper(wall);
+    wall.querySelectorAll(".cell").forEach((c) => (c.style.contentVisibility = ""));
+    const secs = ((performance.now() - t0) / 1000).toFixed(1);
+    $("#count").textContent = `${res.pages} pages`;
+    $("#title").textContent = config().weekly ? "Your Folio · weekly" : "Your Folio · daily";
+    $("#status").textContent = `Built ${res.pages} pages in ${secs} s. Tap any tab or date in the preview to try the links.`;
+    btn.disabled = false; $("#print").disabled = false; built = true;
+  }
+  $("#build").addEventListener("click", build);
+  $("#print").addEventListener("click", () => built && window.print());
+
+  // links inside the preview: scroll to the page and flash it
+  $("#wall").addEventListener("click", (e) => {
+    const a = e.target.closest("a[href^='#']");
+    if (!a) return;
+    e.preventDefault();
+    const t = document.getElementById(a.getAttribute("href").slice(1));
+    if (!t) return;
+    const cell = t.parentElement;
+    cell.scrollIntoView({ behavior: "smooth", block: "center" });
+    cell.classList.add("hit"); setTimeout(() => cell.classList.remove("hit"), 1400);
+  });
+
+  // zoom
+  const zoom = (f) => { const w = $("#wall"); const s = Math.max(.08, Math.min(.5, parseFloat(getComputedStyle(w).getPropertyValue("--s")) * f)); w.style.setProperty("--s", s.toFixed(3)); };
+  $("#zi").addEventListener("click", () => zoom(1.25));
+  $("#zo").addEventListener("click", () => zoom(0.8));
+})();
+</script>
+</body>
+</html>
