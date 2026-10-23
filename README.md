@@ -2,13 +2,11 @@
 
 # The Folio
 
-A whole academic year in one PDF, built for e-ink tablets. Every page has a row of tabs down the right edge: index, year, each month, each of your courses, research and notes. Every date is a link, every week number is a link, and every dated page has a breadcrumb trail and ‹ › arrows. On a Supernote you tap your way around it like an app.
+A whole academic year in one PDF, built for e-ink tablets (although it also prints well!). Every page has a row of tabs down the right edge for quick navigation. Every date is a link, every week number is a link, and every dated page has a breadcrumb trail and ‹ › arrows. On a tablet you tap your way around it like an app.
 
-**[Build your own →](https://thescholium.github.io/scholium-folio/)** It runs in your browser. Pick the start month, Sunday or Monday weeks, a page a day or weeks only, and type your courses; their names go on the tabs.
+**[Build your own →](https://thescholium.github.io/scholium-folio/)** It runs in your browser. Pick the start month, Sunday or Monday weeks, a page a day or weeks only, and type your courses; their names go on the tabs. If you're tech savvy you can tweak other things too!
 
 ![Eight pages of the Folio: cover, index, year, term map, month, week, day and a course section](docs/preview.png)
-
-## What's inside
 
 | Section | Pages |
 | --- | --- |
@@ -21,21 +19,11 @@ A whole academic year in one PDF, built for e-ink tablets. Every page has a row 
 | **Courses** | For each course: a cover page, a Class Hub, two Exam Plans, four Error Logs, four Blurts, two Time Trials and twelve pages of notes. |
 | **Research and notes** | Twelve Research pages for papers and talks; thirty ruled, grid and dot pages. |
 
-The daily edition is about 650 pages and 7 MB; the weekly edition is about 285 pages and 2.4 MB.
+The daily edition is about 650 pages and 7 MB; the weekly edition is about 285 pages and 2.4 MB. 
 
 ## The moon
 
 Each day page shows the moon as it looks that day, and the month calendars mark new moon, first quarter, full moon and last quarter. The phases come from Jean Meeus's *Astronomical Algorithms* (chapter 49) and land within a minute or two of the published times: the generator gives 18:21 UTC for the new moon of the 8 April 2024 eclipse and 06:55 UTC for the full moon of the 14 March 2025 eclipse, which is what the eclipse tables say. You choose the time zone, so a full moon at 1 a.m. lands on the right date for you.
-
-It is decorative. It is also correct.
-
-## On the tablet
-
-1. Build it, in the web builder or with the command line below.
-2. Copy the PDF to the **Document** folder on your Supernote with USB, the Partner app or Supernote Cloud.
-3. Open it and tap a tab. If your pen draws instead of following the link, tap with a finger.
-
-Every page is 1404 × 1872 px, the Nomad's own resolution, so nothing is scaled. It also fits the reMarkable 2 exactly.
 
 ## How it is built
 
