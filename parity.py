@@ -12,7 +12,7 @@ def strip(h):  # links and visible text, ignoring markup differences
     return links, text
 with sync_playwright() as pw:
     b = pw.chromium.launch(); pg = b.new_page()
-    pg.goto((HERE.parent / "docs/folio/_harness.html").as_uri())
+    pg.goto((HERE / "docs/_harness.html").as_uri())
     for cfg, args in cases:
         cfg["courses"] = [{"name": "", "tab": ""} for _ in range(6)]
         r = pg.evaluate("cfg => { const o = Folio.render(cfg, document.getElementById('folio')); return {ids: o.ids, html: document.getElementById('folio').innerHTML}; }", cfg)

@@ -3,3 +3,4 @@ __pycache__/
 *.ids.json
 out/
 dist/
+.DS_Store

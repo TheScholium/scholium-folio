@@ -1,4 +1,4 @@
-"""Build Folio PDFs from the same generator the web builder uses (docs/folio/folio.js).
+"""Build Folio PDFs from the same generator the web builder uses (docs/folio.js).
 
     python3 build.py                                  # daily, Monday weeks, Aug 2026
     python3 build.py --weekly --sunday
@@ -38,7 +38,7 @@ def main():
     with sync_playwright() as pw:
         b = pw.chromium.launch()
         pg = b.new_page(viewport={"width": 1404, "height": 1872})
-        pg.goto((HERE.parent / "docs/folio/_harness.html").as_uri())
+        pg.goto((HERE / "docs/_harness.html").as_uri())
         res = pg.evaluate("cfg => { const r = Folio.render(cfg, document.getElementById('folio')); return {n: r.pages, ids: r.ids}; }", cfg)
         n = res["n"]
         pg.evaluate("document.fonts.ready")

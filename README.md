@@ -1,12 +1,12 @@
-<p align="center"><img src="../docs/folio/og.png" alt="The Folio" width="100%"></p>
+<p align="center"><img src="docs/og.png" alt="The Folio" width="100%"></p>
 
 # The Folio
 
 A whole academic year in one PDF, built for e-ink tablets. Every page has a row of tabs down the right edge: index, year, each month, each of your courses, research and notes. Every date is a link, every week number is a link, and every dated page has a breadcrumb trail and ‹ › arrows. On a Supernote you tap your way around it like an app.
 
-**[Build your own →](https://thescholium.github.io/scholium/folio/)** It runs in your browser. Pick the start month, Sunday or Monday weeks, a page a day or weeks only, and type your courses; their names go on the tabs.
+**[Build your own →](https://thescholium.github.io/scholium-folio/)** It runs in your browser. Pick the start month, Sunday or Monday weeks, a page a day or weeks only, and type your courses; their names go on the tabs.
 
-![Eight pages of the Folio: cover, index, year, term map, month, week, day and a course section](../docs/folio/preview.png)
+![Eight pages of the Folio: cover, index, year, term map, month, week, day and a course section](docs/preview.png)
 
 ## What's inside
 
@@ -31,7 +31,7 @@ It is decorative. It is also correct.
 
 ## On the tablet
 
-1. Build it (or download a ready-made edition from the [releases](https://github.com/TheScholium/scholium/releases)).
+1. Build it, in the web builder or with the command line below.
 2. Copy the PDF to the **Document** folder on your Supernote with USB, the Partner app or Supernote Cloud.
 3. Open it and tap a tab. If your pen draws instead of following the link, tap with a finger.
 
@@ -39,7 +39,7 @@ Every page is 1404 × 1872 px, the Nomad's own resolution, so nothing is scaled.
 
 ## How it is built
 
-The planner is HTML and CSS, printed to PDF by Chromium. The same generator, [`docs/folio/folio.js`](../docs/folio/folio.js), runs in the web builder and in the command-line build here.
+The planner is HTML and CSS, printed to PDF by Chromium. The same generator, [`docs/folio.js`](docs/folio.js), runs in the web builder and in the command-line build here.
 
 ```bash
 pip install playwright pikepdf pypdf
@@ -59,4 +59,4 @@ A few things make it work well on e-ink:
 
 ## License
 
-The pages: [CC BY-NC-SA 4.0](../LICENSES/CC-BY-NC-SA-4.0.txt), like the templates. Print it, share it, adapt it; don't sell it. The code: [MIT](../LICENSES/MIT.txt). Fonts: EB Garamond and Cormorant Garamond, [SIL Open Font License](../LICENSES/OFL-1.1.txt).
+The pages: [CC BY-NC-SA 4.0](LICENSES/CC-BY-NC-SA-4.0.txt), like the [templates](https://github.com/TheScholium/scholium). Print it, share it, adapt it; don't sell it. The code: [MIT](LICENSES/MIT.txt). Fonts: EB Garamond and Cormorant Garamond, [SIL Open Font License](LICENSES/OFL-1.1.txt).

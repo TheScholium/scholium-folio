@@ -1,6 +1,6 @@
 """Reference implementation of the Folio generator, in Python.
 
-The live generator is docs/folio/folio.js; parity.py checks the two agree
+The live generator is docs/folio.js; parity.py checks the two agree
 page for page, link for link and moon for moon.
 
 The Folio: a hyperlinked academic-year planner for the Supernote Nomad.
@@ -28,7 +28,7 @@ from playwright.sync_api import sync_playwright
 import moon  # noqa: reference implementation
 
 HERE = pathlib.Path(__file__).resolve().parent
-ASSETS = HERE.parent.parent / "docs" / "folio"
+ASSETS = HERE.parent / "docs"
 W, H = 1404, 1872
 RAIL = 54            # tab rail width, drawn in the templates' blank right margin
 PAD_R = RAIL + 24

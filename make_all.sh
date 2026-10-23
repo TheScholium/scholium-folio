@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds the four standard editions from docs/folio/folio.js and audits every link.
+# Builds the four standard editions from docs/folio.js and audits every link.
 set -e
 cd "$(dirname "$0")"
 mkdir -p dist
