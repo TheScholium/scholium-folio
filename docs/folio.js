@@ -316,9 +316,10 @@
 
     index() {
       const months = this.months.map(([y, m]) => `<a href='#${this.mid(y, m)}'>${MONTHS[m - 1]} ${y}<span class=lead></span><span class=pg>calendar</span></a>`).join("");
+      const hasCourses = this.courseList.length > 0;
       const courses = this.courseList.map((c, i) => `<a href='#c${i}'>${esc(c[0])}<span class=lead></span><span class=pg>hub · logs · notes</span></a>`).join("");
-      const terms = this.terms.map(([tid, name]) => `<a href='#${tid}'>${name}<span class=lead></span><span class=pg>deadlines</span></a><a href='#${tid}-map' style='padding-left:28px;font-size:24px'>term map<span class=lead></span><span class=pg>weeks × courses</span></a>`).join("");
-      const how = `<p>Tap a tab on the right edge to jump to any month or course. On dated pages, the line at the top shows where you are; tap any part of it to go up a level, and use ‹ › to step back or forward.</p>
+      const terms = this.terms.map(([tid, name]) => `<a href='#${tid}'>${name}<span class=lead></span><span class=pg>deadlines</span></a>${hasCourses ? `<a href='#${tid}-map' style='padding-left:28px;font-size:24px'>term map<span class=lead></span><span class=pg>weeks × courses</span></a>` : ""}`).join("");
+      const how = `<p>Tap a tab on the right edge to jump to any month${hasCourses ? " or course" : ""}. On dated pages, the line at the top shows where you are; tap any part of it to go up a level, and use ‹ › to step back or forward.</p>
 <p style="margin-top:14px">In a month, tap a date to open its ${this.daily ? "day" : "week"}, and a week number to open its week. Moon phases are computed for ${esc(this.cfg.tz.replace(/_/g, " "))}.</p>`;
       this.add("index", `${this.crumbs([["cover", "The Folio"], [null, "Index"]])}
 <div class=mast><h1>The <i>Index</i></h1><div class=meta>${esc(this.title)}</div></div><div class=rule></div>
@@ -328,7 +329,7 @@
   <h3>Months</h3>${months}
  </div>
  <div class="col toc" style="flex:1">
-  <h3>Courses</h3>${courses}
+  ${hasCourses ? `<h3>Courses</h3>${courses}` : ""}
   <h3>Elsewhere</h3><a href='#research'>Research<span class=lead></span><span class=pg>papers &amp; talks</span></a><a href='#notes'>Notes<span class=lead></span><span class=pg>ruled · grid · dot</span></a>
   <h3>How the Folio works</h3><div style="font-size:23px;line-height:1.45;color:#333">${how}</div>
  </div>
@@ -357,10 +358,10 @@ ${this.foot(...QUOTES[5])}`, "year");
         const [season, yr] = name.split(" ");
         this.add(tid, `${this.crumbs([["index", "Index"], [null, name]])}
 <div class=mast><h1>${season} <i>Deadlines</i></h1><div class=meta>${yr}</div></div><div class=rule></div>
-<div class=small style="margin:-6px 0 14px;font-size:20px">Copy every due date from your syllabi here once, at the start of term.</div>
-<table><tr><th>course</th><th>assignment / exam</th><th>due</th><th>weight</th><th>done</th></tr>${rows}</table>
+<div class=small style="margin:-6px 0 14px;font-size:20px">${this.courseList.length ? "Copy every due date from your syllabi here once, at the start of term." : "Write every deadline here once, at the start of term."}</div>
+<table><tr><th>${this.courseList.length ? "course" : "project"}</th><th>assignment / exam</th><th>due</th><th>weight</th><th>done</th></tr>${rows}</table>
 <div style="flex:1"></div>${this.foot(...QUOTES[1])}`, "year");
-        this.termMap(tid, name);
+        if (this.courseList.length) this.termMap(tid, name);
       }
     }
 

@@ -51,6 +51,7 @@ input:focus,select:focus{outline:1px solid var(--gold-dim);border-color:var(--go
 .courses .c span{color:var(--faint);font-family:CG,Georgia,serif;font-size:18px}
 .courses .c button{background:none;border:none;color:var(--faint);cursor:pointer;font-size:18px}
 .courses .c button:hover{color:var(--gold)}
+.courses .none{color:var(--faint);font-size:16px;margin:0 0 8px}
 .btn{display:inline-block;border:1px solid var(--gold-dim);border-radius:2px;background:none;color:var(--gold);font:inherit;font-variant:small-caps;letter-spacing:.09em;padding:9px 18px;cursor:pointer;text-decoration:none}
 .btn:hover{background:rgba(196,162,77,.1);border-color:var(--gold)}
 .btn.cta{background:var(--gold-dim);color:#14110b;border-color:var(--gold-dim)}
@@ -168,14 +169,15 @@ footer.ui{border-top:1px solid var(--rule);padding:20px 28px;color:var(--faint);
   const courses = [["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""]];
   const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
   function drawCourses() {
-    $("#courses").innerHTML = courses.map((c, i) => `<div class=c><span>${roman[i]}</span>
+    $("#courses").innerHTML = courses.length ? courses.map((c, i) => `<div class=c><span>${roman[i]}</span>
       <input type=text data-i=${i} data-k=0 value="${c[0].replace(/"/g, "&quot;")}" placeholder="Course ${roman[i]}">
       <input type=text data-i=${i} data-k=1 maxlength=8 value="${c[1].replace(/"/g, "&quot;")}" placeholder="C·${roman[i]}">
-      <button type=button data-del=${i} title="remove">×</button></div>`).join("");
+      <button type=button data-del=${i} title="remove">×</button></div>`).join("")
+      : `<p class=none>No courses. The Folio will have no course tabs, course sections or term map.</p>`;
     $("#addc").disabled = courses.length >= 8;
   }
   $("#courses").addEventListener("input", (e) => { const t = e.target; if (t.dataset.i) courses[+t.dataset.i][+t.dataset.k] = t.value; });
-  $("#courses").addEventListener("click", (e) => { const d = e.target.dataset.del; if (d !== undefined && courses.length > 1) { courses.splice(+d, 1); drawCourses(); } });
+  $("#courses").addEventListener("click", (e) => { const d = e.target.dataset.del; if (d !== undefined) { courses.splice(+d, 1); drawCourses(); } });
   $("#addc").addEventListener("click", () => { if (courses.length < 8) { courses.push(["", ""]); drawCourses(); } });
   drawCourses();
 

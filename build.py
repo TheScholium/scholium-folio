@@ -23,10 +23,13 @@ def main():
     ap.add_argument("--left", type=int, default=56)
     ap.add_argument("--owner", default="")
     ap.add_argument("--courses", default="", help='"Full name:TAB,Full name:TAB" (default: six unnamed courses)')
+    ap.add_argument("--no-courses", action="store_true", help="no courses at all: no course tabs or sections, no term map")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     courses = [{"name": "", "tab": ""} for _ in range(6)]
-    if a.courses:
+    if a.no_courses:
+        courses = []
+    elif a.courses:
         courses = []
         for part in a.courses.split(","):
             name, _, tab = part.partition(":")
