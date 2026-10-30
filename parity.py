@@ -5,6 +5,7 @@ cases = [
   ({"start": "2026-08", "months": 12, "sunday": False, "weekly": False, "tz": "America/New_York"}, []),
   ({"start": "2026-08", "months": 12, "sunday": True, "weekly": True, "tz": "America/New_York"}, ["--sunday", "--weekly"]),
   ({"start": "2027-01", "months": 6, "sunday": False, "weekly": False, "tz": "Europe/London"}, ["--start", "2027-01", "--months", "6", "--tz", "Europe/London"]),
+  ({"start": "2026-08", "months": 12, "sunday": False, "weekly": True, "tz": "America/New_York", "ncourses": 0}, ["--weekly", "--courses", "0"]),
 ]
 def strip(h):  # links and visible text, ignoring markup differences
     links = re.findall(r"href=[\"']#([^\"']+)[\"']", h)
@@ -14,7 +15,7 @@ with sync_playwright() as pw:
     b = pw.chromium.launch(); pg = b.new_page()
     pg.goto((HERE / "docs/_harness.html").as_uri())
     for cfg, args in cases:
-        cfg["courses"] = [{"name": "", "tab": ""} for _ in range(6)]
+        cfg["courses"] = [{"name": "", "tab": ""} for _ in range(cfg.pop("ncourses", 6))]
         r = pg.evaluate("cfg => { const o = Folio.render(cfg, document.getElementById('folio')); return {ids: o.ids, html: document.getElementById('folio').innerHTML}; }", cfg)
         subprocess.run([sys.executable, "reference/build_folio.py", "--html-only", "--out", "out/_ref.pdf"] + args, check=True, capture_output=True)
         ref = open("out/_ref.html").read()

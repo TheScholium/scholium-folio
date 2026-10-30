@@ -337,8 +337,9 @@ class Folio:
     def index(self):
         months = "".join(f"<a href='#{self.mid(y, m)}'>{calendar.month_name[m]} {y}<span class=lead></span><span class=pg>calendar</span></a>" for y, m in self.months)
         courses = "".join(f"<a href='#c{i}'>{html.escape(self.course_list[i][0])}<span class=lead></span><span class=pg>hub · logs · notes</span></a>" for i in range(self.courses))
-        terms = "".join(f"<a href='#{tid}'>{name}<span class=lead></span><span class=pg>deadlines</span></a><a href='#{tid}-map' style='padding-left:28px;font-size:24px'>term map<span class=lead></span><span class=pg>weeks × courses</span></a>" for tid, name in self.terms)
-        how = """<p>Tap a tab on the right edge to jump to any month or course. On dated pages, the line at the top shows where you are; tap any part of it to go up a level, and use ‹ › to step back or forward.</p>
+        tmap = lambda tid: f"<a href='#{tid}-map' style='padding-left:28px;font-size:24px'>term map<span class=lead></span><span class=pg>weeks × courses</span></a>" if self.courses else ""
+        terms = "".join(f"<a href='#{tid}'>{name}<span class=lead></span><span class=pg>deadlines</span></a>{tmap(tid)}" for tid, name in self.terms)
+        how = f"""<p>Tap a tab on the right edge to jump to any month{" or course" if self.courses else ""}. On dated pages, the line at the top shows where you are; tap any part of it to go up a level, and use ‹ › to step back or forward.</p>
 <p style="margin-top:14px">In a month, tap a date to open its day, and a week number to open its week. Moon phases are computed for your time zone.</p>"""
         body = f"""{self.crumbs([("cover", "The Folio"), (None, "Index")])}
 <div class=mast><h1>The <i>Index</i></h1><div class=meta>{self.title}</div></div><div class=rule></div>
@@ -348,7 +349,7 @@ class Folio:
   <h3>Months</h3>{months}
  </div>
  <div class="col toc" style="flex:1">
-  <h3>Courses</h3>{courses}
+  {"<h3>Courses</h3>" + courses if self.courses else ""}
   <h3>Elsewhere</h3><a href='#research'>Research<span class=lead></span><span class=pg>papers &amp; talks</span></a><a href='#notes'>Notes<span class=lead></span><span class=pg>ruled · grid · dot</span></a>
   <h3>How the Folio works</h3><div style="font-size:23px;line-height:1.45;color:#333">{how}</div>
  </div>
@@ -400,11 +401,11 @@ class Folio:
         for tid, name in self.terms:
             body = f"""{self.crumbs([("index", "Index"), (None, name)])}
 <div class=mast><h1>{name.split()[0]} <i>Deadlines</i></h1><div class=meta>{name.split()[1]}</div></div><div class=rule></div>
-<div class=small style="margin:-6px 0 14px;font-size:20px">Copy every due date from your syllabi here once, at the start of term.</div>
-<table><tr><th>course</th><th>assignment / exam</th><th>due</th><th>weight</th><th>done</th></tr>{rows}</table>
+<div class=small style="margin:-6px 0 14px;font-size:20px">{"Copy every due date from your syllabi here once, at the start of term." if self.courses else "Write every deadline here once, at the start of term."}</div>
+<table><tr><th>{"course" if self.courses else "project"}</th><th>assignment / exam</th><th>due</th><th>weight</th><th>done</th></tr>{rows}</table>
 <div style="flex:1"></div>{self.foot(*QUOTES[1])}"""
             self.add(tid, body, "year")
-            self.term_map(tid, name)
+            if self.courses: self.term_map(tid, name)
 
     def term_map(self, tid, name):
         months = set(self._term_months[tid])

@@ -4,7 +4,7 @@
 
 A whole academic year in one PDF, built for e-ink tablets (although it also prints well!). Every page has a row of tabs down the right edge for quick navigation. Every date is a link, every week number is a link, and every dated page has a breadcrumb trail and ‹ › arrows. On a tablet you tap your way around it like an app.
 
-**[Build your own →](https://thescholium.github.io/scholium-folio/)** It runs in your browser. Pick the start month, Sunday or Monday weeks, a page a day or weeks only, and type your courses; their names go on the tabs. If you're tech savvy you can tweak other things too!
+**[Build your own →](https://thescholium.github.io/scholium-folio/)** It runs in your browser. Pick the start month, Sunday or Monday weeks, a page a day or weeks only, and type your courses; their names go on the tabs. No courses? Remove them all and you get a planner with no course tabs, sections or term map. If you're tech savvy you can tweak other things too!
 
 ![Eight pages of the Folio: cover, index, year, term map, month, week, day and a course section](docs/preview.png)
 
@@ -12,11 +12,11 @@ A whole academic year in one PDF, built for e-ink tablets (although it also prin
 | --- | --- |
 | **Cover and index** | The index links to everything. |
 | **The year** | Twelve small calendars; every day links to its page. Plus a box for key dates. |
-| **Terms** | A deadlines page for each term (copy your syllabi in once), and a **term map**: one row per week, one column per course, so the crunch weeks are visible a month ahead. |
+| **Terms** | A deadlines page for each term (copy your syllabi in once), and a **term map**: one row per week, one column per course, so the crunch weeks are visible a month ahead. With no courses there is no term map, and the deadlines page asks for a project instead of a course. |
 | **Months** | A calendar with week numbers, the moon's phases, goals and due dates, then a habit tracker for the month. |
 | **Weeks** | Seven days, one goal, what's due, habit rings, wins. |
 | **Days** *(daily edition)* | 6 a.m. to midnight, three things, a to-do list with due dates, and a grid for "what I learned today" — close the book first. |
-| **Courses** | For each course: a cover page, a Class Hub, two Exam Plans, four Error Logs, four Blurts, two Time Trials and twelve pages of notes. |
+| **Courses** *(optional)* | For each course: a cover page, a Class Hub, two Exam Plans, four Error Logs, four Blurts, two Time Trials and twelve pages of notes. |
 | **Research and notes** | Twelve Research pages for papers and talks; thirty ruled, grid and dot pages. |
 
 The daily edition is about 650 pages and 7 MB; the weekly edition is about 285 pages and 2.4 MB. 
@@ -35,6 +35,7 @@ playwright install chromium
 python3 build.py --out my-folio.pdf
 python3 build.py --sunday --weekly --start 2027-01 --months 6 \
                  --courses "Quantum Mechanics:QM,Real Analysis:Analysis" --out spring.pdf
+python3 build.py --no-courses --out no-courses.pdf    # no course tabs, sections or term map
 ./make_all.sh          # the four standard editions, each one audited
 ```
 
